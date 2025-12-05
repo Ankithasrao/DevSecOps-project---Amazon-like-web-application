@@ -19,7 +19,7 @@ pipeline {
 
         stage("Git Checkout") {
             steps {
-                git branch: 'main', url: 'https://github.com/Ankithasrao/DevSecOps-project---Amazon-like-web-application.git' //Change it to your it repo
+                git branch: 'main', url: 'https://github.com/Ankithasrao/DevSecOps-project---Amazon-like-web-application-.git' //Change it to your it repo
             }
         }
 
