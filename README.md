@@ -447,11 +447,12 @@ docker images
 
 ## Jenkins Credentials to Store
 |Purpose|ID (Should match with JenkinsFile)|Type|Notes|
+| ------ | ------ | ------ | ------ | 
 |Email|mail-cred|Username/app password||
 |SonarQube|sonar-token|Secret text|From SonarQube application|
 |Docker Hub|docker-cred|Secret text|From your Docker Hub profile|
 
-### Webhook example: http://<jenkins-ip>:8080/sonarqube-webhook/
+#### Webhook example: http://<jenkins-ip>:8080/sonarqube-webhook/
 
 ## Jenkins Tools Configuration:
  - JDK
