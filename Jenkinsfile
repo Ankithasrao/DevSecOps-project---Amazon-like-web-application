@@ -19,7 +19,7 @@ pipeline {
 
         stage("Git Checkout") {
             steps {
-                git branch: 'main', url: 'https://github.com/Ankithasrao/DevSecOps-project---Amazon-like-web-application-.git' //Change it to your it repo
+                git branch: 'main', url: 'https://github.com/Ankithasrao/DevSecOps-project---Amazon-like-web-application.git' //Change it to your it repo
             }
         }
 
@@ -149,8 +149,8 @@ pipeline {
                     <p>Started by: ${buildUser}</p>
                     <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                 """,
-                to: 'ankithasrao2020@gmail.com',
-                from: 'ankithasrao2020@gmail.com',
+                to: 'ankithabg4@gmail.com',
+                from: 'ankithabg4@gmail.com',
                 mimeType: 'text/html',
                 attachmentsPattern: 'trivyfs.txt,trivy-image.json,trivy-image.txt,dependency-check-report.xml'
                     )
