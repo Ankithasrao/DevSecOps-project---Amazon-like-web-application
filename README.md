@@ -446,7 +446,7 @@ docker images
 ```
 
 ## Jenkins Credentials to Store
-|Purpose|ID (Should match with JenkinsFile)|Type|Notes|
+|Purpose|ID (Should match with the JenkinsFile)|Type|Notes|
 | ------ | ------ | ------ | ------ | 
 |Email|mail-cred|Username/app password||
 |SonarQube|sonar-token|Secret text|From SonarQube application|
