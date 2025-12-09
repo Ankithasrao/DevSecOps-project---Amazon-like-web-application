@@ -151,7 +151,33 @@ sudo apt update
 sudo apt install git -y
 ```
 # Java
+## Install OpenJDK (choose 17 or 21 depending on your needs) :
+```
+# OpenJDK 17
+sudo apt install -y openjdk-17-jdk
 
+# OR OpenJDK 21
+sudo apt install -y openjdk-21-jdk
+```
+### Verify:
+```
+java --version
+```
 
+# Jenkins
+## Official docs: [https://www.jenkins.io/doc/book/installing/linux/]
+```
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
+sudo apt update
+sudo apt install -y jenkins
+sudo systemctl enable --now jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+```
 
