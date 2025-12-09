@@ -95,7 +95,7 @@ This ensures **shift-left security** and continuous compliance.
 ├── README.md
 ```
 
-### Project SetUp
+## Project SetUp
 
 #### Ports to Enable in Security Group
 
@@ -110,5 +110,48 @@ This ensures **shift-left security** and continuous compliance.
 | Node Exporter | 9100   |
 | Grafana|3000 |
 
-### Prerequisites
+## Prerequisites
 ### This guide assumes an Ubuntu/Debian-like environment and sudo privileges.
+
+## System Update & Common Packages
+```
+sudo apt update
+sudo apt upgrade -y
+
+# Common tools : It installs commonly used tools required for DevOps, development, networking, package building, HTTPS communication, and certificates.
+sudo apt install -y bash-completion wget git zip unzip curl jq net-tools build-essential ca-certificates apt-transport-https gnupg fontconfig
+
+```
+### Below is what each package does:
+
+| Package | Purpose |
+| ------ | ------ |
+| bash-completion | Auto-complete commands |
+| wget | Download files |
+| git | Version control |
+| zip/unzip | File compression |
+| curl | API calls, downloads |
+| jq | JSON processing |
+| net-tools | Network troubleshooting   |
+| build-essentialna|Compilers & build tools |
+|ca-certificates|HTTPS certificate trust|
+|apt-transport-https|Install via HTTPS|
+|gnupg|Secure package verification|
+|fontconfig|Font management|
+
+## Reload bash completion if needed:
+```
+source /etc/bash_completion
+```
+
+## Install latest Git:
+```
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+sudo apt install git -y
+```
+# Java
+
+
+
+
