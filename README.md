@@ -93,4 +93,22 @@ This ensures **shift-left security** and continuous compliance.
 │   ├── grafana-dashboards/
 ├── src/
 ├── README.md
+```
 
+### Project SetUp
+
+#### Ports to Enable in Security Group
+
+| Service | Port |
+| ------ | ------ |
+| HTTP | 80 |
+| HTTPS | 443 |
+| SSH | 22 |
+| Jenkins | 8080 |
+| SonarQube | 9000 |
+| Prometheus | 9090|
+| Node Exporter | 9100   |
+| Grafana|3000 |
+
+### Prerequisites
+### This guide assumes an Ubuntu/Debian-like environment and sudo privileges.
