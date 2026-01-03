@@ -502,3 +502,185 @@ sudo ./aws/install
 ### 2. kubectl Installation
 
 #### Refer: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+```
+sudo apt-get update
+# apt-transport-https may be a dummy package; if so, you can skip that package
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+
+# If the folder `/etc/apt/keyrings` does not exist, it should be created before the curl command, read the note below.
+# sudo mkdir -p -m 755 /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring
+
+# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
+
+sudo apt-get update
+sudo apt-get install -y kubectl bash-completion
+
+# Enable kubectl auto-completion
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+echo 'alias k=kubectl' >> ~/.bashrc
+echo 'complete -F __start_kubectl k' >> ~/.bashrc
+
+# Apply changes immediately
+source ~/.bashrc
+```
+
+### 3. eksctl Installation
+
+#### Refer: https://docs.aws.amazon.com/eks/latest/eksctl/installation.html
+
+```
+# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+ARCH=amd64
+PLATFORM=$(uname -s)_$ARCH
+
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+
+# (Optional) Verify checksum
+curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
+
+tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+
+sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
+
+# Install bash completion
+sudo apt-get install -y bash-completion
+
+# Enable eksctl auto-completion
+echo 'source <(eksctl completion bash)' >> ~/.bashrc
+echo 'alias e=eksctl' >> ~/.bashrc
+echo 'complete -F __start_eksctl e' >> ~/.bashrc
+
+# Apply changes immediately
+source ~/.bashrc
+```
+
+### 4. Helm Installation
+
+#### Refer: https://helm.sh/docs/intro/install/
+
+```
+sudo apt-get install curl gpg apt-transport-https --yes
+curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm bash-completion
+
+# Enable Helm auto-completion
+echo 'source <(helm completion bash)' >> ~/.bashrc
+echo 'alias h=helm' >> ~/.bashrc
+echo 'complete -F __start_helm h' >> ~/.bashrc
+
+# Apply changes immediately
+source ~/.bashrc
+```
+
+### 5. AWS CLI Configuration
+
+```
+aws configure
+aws configure list
+```
+
+### 6. Create EKS Cluster and Nodegroup ( Replace the versions according to your requirment )
+
+```
+eksctl create cluster \
+  --name my-cluster \
+  --region ap-south-1 \
+  --version 1.33 \
+  --without-nodegroup
+
+eksctl create nodegroup \
+  --cluster my-cluster \
+  --name my-nodes-ng \
+  --nodes 2 \
+  --nodes-min 2 \
+  --nodes-max 6 \
+  --node-type t3.medium
+```
+
+### 7. Update kubeconfig
+
+```
+aws eks update-kubeconfig --name my-cluster --region ap-south-1
+```
+
+### 8. Associate IAM OIDC Provider
+
+```
+eksctl utils associate-iam-oidc-provider --cluster my-cluster --approve
+```
+### 9. Create IAM Policy for AWS Load Balancer Controller
+
+#### New policy link: https://docs.aws.amazon.com/eks/latest/userguide/lbc-manifest.html
+
+```
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.13.3/docs/install/iam_policy.json
+
+aws iam create-policy \
+  --policy-name AWSLoadBalancerControllerIAMPolicy \
+  --policy-document file://iam_policy.json
+```
+
+### 10. Create IAM Service Account
+
+##### Replace <ACCOUNT_ID> with your AWS account ID.
+
+```
+eksctl create iamserviceaccount \
+  --cluster=my-cluster \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --attach-policy-arn=arn:aws:iam::<ACCOUNT_ID>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --override-existing-serviceaccounts \
+  --region ap-south-1 \
+  --approve
+```
+### 11. Install AWS Load Balancer Controller via Helm ( Go for the latest version )
+
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update eks
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system \
+  --set clusterName=my-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=ap-south-1 \
+  --version 1.13.3
+```
+##### Optional: List available versions
+
+```
+helm search repo eks/aws-load-balancer-controller --versions
+helm list -A
+```
+#### Verify installation:
+
+```
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+
+### 12. Create and Set Namespace for Your Application
+
+```
+
+git clone <Your repository>
+cd DevSecOps-project---Amazon-like-web-application/k8s-80
+
+kubectl apply -f .
+kubectl config set-context --current --namespace=amazon-ns
+kubectl get ingress -w
+kubectl delete -f .
+```
+
+### Delete EKS Cluster (Cleanup)
+
+```
+eksctl delete cluster --name my-cluster --region ap-south-1
+```
