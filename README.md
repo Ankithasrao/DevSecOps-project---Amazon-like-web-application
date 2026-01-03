@@ -11,6 +11,9 @@ This project is ideal for:
 
 ---
 
+<img width="1378" height="963" alt="Amazon 16" src="https://github.com/user-attachments/assets/b5cf63f1-debe-44da-a804-f6a4a9449f4d" />
+
+
 ## 📌 Project Features
 
 ✅ Automated CI/CD using Jenkins  
@@ -629,7 +632,7 @@ aws iam create-policy \
 
 ### 10. Create IAM Service Account
 
-##### Replace <ACCOUNT_ID> with your AWS account ID.
+#### Replace <ACCOUNT_ID> with your AWS account ID.
 
 ```
 eksctl create iamserviceaccount \
@@ -654,13 +657,13 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n ku
   --set region=ap-south-1 \
   --version 1.13.3
 ```
-##### Optional: List available versions
+#### Optional: List available versions
 
 ```
 helm search repo eks/aws-load-balancer-controller --versions
 helm list -A
 ```
-#### Verify installation:
+### Verify installation:
 
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
@@ -679,8 +682,43 @@ kubectl get ingress -w
 kubectl delete -f .
 ```
 
+## Monitor Kubernetes with Prometheus
+
+### Install Node Exporter using Helm:
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+kubectl create namespace prometheus-node-exporter
+helm install prometheus-node-exporter prometheus-community/prometheus-node-exporter --namespace prometheus-node-exporter
+```
+
+#### Add to /etc/prometheus/prometheus.yml:
+
+```
+sudo vim Add to /etc/prometheus/prometheus.yml:
+```
+
+```
+  - job_name: 'k8s'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['node1Ip:9100'] # Change the public ip of one of the Node groups of EKS ( created EC2 instance /compute of eks )
+```
+
+#### Docs: https://grafana.com/grafana/dashboards/17119-kubernetes-eks-cluster-prometheus/ ID FOR EKS 17119
+
+### Validate config: 
+
+```
+promtool check config /etc/prometheus/prometheus.yml
+sudo systemctl restart  prometheus.service
+```
+
+### Access the application using ALB DNS
+
 ### Delete EKS Cluster (Cleanup)
 
 ```
 eksctl delete cluster --name my-cluster --region ap-south-1
 ```
+
