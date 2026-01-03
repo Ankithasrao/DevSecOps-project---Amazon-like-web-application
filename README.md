@@ -420,7 +420,7 @@ sudo systemctl start grafana-server
 sudo systemctl status grafana-server
 ```
 
-#### Access: http://ip-address:3000
+##### Access: http://ip-address:3000
 
 ### Datasource: http://promethues-ip:9090
 
@@ -456,11 +456,11 @@ docker images
 #### Webhook example: http://<jenkins-ip>:8080/sonarqube-webhook/
 
 ## Jenkins Tools Configuration:
- - JDK
+ - JDK [jdk17]
  - SonarQube Scanner installations [sonar-scanner]
- - NodeJS
+ - NodeJS [node16]
  - Dependency-Check installations [dp-check]
- - Docker installations
+ - Docker installations [docker]
 
 ## Jenkins System Configuration
 ### SonarQube servers:
@@ -484,6 +484,7 @@ docker images
 - SMTP Port: 587
 - Reply-To Address: example@gmail.com
 
-## Build now and See the configuration pipeline of the jenkins - End of CI 
+## Build now and See the configuration pipeline of the jenkins  - End of CI
+#### Note : You can access the application using the public-ip
   
   
