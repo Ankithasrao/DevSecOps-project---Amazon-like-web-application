@@ -486,5 +486,19 @@ docker images
 
 ## Build now and See the configuration pipeline of the jenkins  - End of CI
 #### Note : You can access the application using the public-ip
-  
-  
+
+# EKS cluster setup and ALB Ingress Kubernetes Setup
+#### This covers the installation and setup for AWS CLI, kubectl, eksctl, and helm, and creating/configuring an EKS cluster with AWS Load Balancer Controller.
+
+### 1. AWS CLI Installation
+#### Refer: [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+```
+sudo apt install -y unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+### 2. kubectl Installation
+
+#### Refer: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
