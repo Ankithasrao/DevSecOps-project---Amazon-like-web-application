@@ -695,7 +695,7 @@ helm install prometheus-node-exporter prometheus-community/prometheus-node-expor
 #### Add to /etc/prometheus/prometheus.yml:
 
 ```
-sudo vim Add to /etc/prometheus/prometheus.yml:
+sudo vim  /etc/prometheus/prometheus.yml
 ```
 
 ```
