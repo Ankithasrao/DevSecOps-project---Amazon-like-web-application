@@ -444,6 +444,7 @@ docker ps
 OR
 docker images
 ```
+### Access: http://ip-address:9000
 
 ## Jenkins Credentials to Store
 |Purpose|ID (Should match with the JenkinsFile)|Type|Notes|
